@@ -1,0 +1,5 @@
+[build]
+  command = "make site"
+  publish = "docs"
+
+[build.environment]

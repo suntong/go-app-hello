@@ -4,3 +4,6 @@ build:
 
 run: build
 	./hello
+
+site: build
+	go test -v .

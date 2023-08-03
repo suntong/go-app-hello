@@ -34,6 +34,12 @@ func _main() {
 		Name:        "Hello",
 		Description: "An Hello World! example",
 		Resources:   app.GitHubPages(ghPagePrefix),
+		Image:       "/web/icon.png",
+		Icon: app.Icon{
+			Default:    "/web/icon.png",
+			Large:      "/web/icon.png",
+			AppleTouch: "/web/icon.png",
+		},
 	})
 
 	if err != nil {

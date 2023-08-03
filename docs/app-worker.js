@@ -1,8 +1,8 @@
-const cacheName = "app-" + "11184b6227b243893307807f2c8633ba6355f7d4";
-const resourcesToCache = ["/go-app-hello","/go-app-hello/app.css","/go-app-hello/app.js","/go-app-hello/manifest.webmanifest","/go-app-hello/wasm_exec.js","/go-app-hello/web/app.wasm","https://github.com/maxence-charriere/go-app/blob/master/docs/web/icon.png"];
+const cacheName = "app-" + "d1e57fa97129e0e7309dd50b5e12ec93f86ee1a0";
+const resourcesToCache = ["/go-app-hello","/go-app-hello/app.css","/go-app-hello/app.js","/go-app-hello/manifest.webmanifest","/go-app-hello/wasm_exec.js","/go-app-hello/web/app.wasm","/go-app-hello/web/icon.png"];
 
 self.addEventListener("install", (event) => {
-  console.log("installing app worker 11184b6227b243893307807f2c8633ba6355f7d4");
+  console.log("installing app worker d1e57fa97129e0e7309dd50b5e12ec93f86ee1a0");
 
   event.waitUntil(
     caches
@@ -28,7 +28,7 @@ self.addEventListener("activate", (event) => {
       );
     })
   );
-  console.log("app worker 11184b6227b243893307807f2c8633ba6355f7d4 is activated");
+  console.log("app worker d1e57fa97129e0e7309dd50b5e12ec93f86ee1a0 is activated");
 });
 
 self.addEventListener("fetch", (event) => {

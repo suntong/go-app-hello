@@ -9,12 +9,12 @@
       "sizes": "any"
     },
     {
-      "src": "https://github.com/maxence-charriere/go-app/blob/master/docs/web/icon.png",
+      "src": "/go-app-hello/web/icon.png",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "https://github.com/maxence-charriere/go-app/blob/master/docs/web/icon.png",
+      "src": "/go-app-hello/web/icon.png",
       "type": "image/png",
       "sizes": "192x192"
     }

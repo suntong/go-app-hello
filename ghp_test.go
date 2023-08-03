@@ -2,12 +2,15 @@ package main
 
 import (
 	"log"
+	"os"
 	"testing"
 
 	"hello/components"
 
 	"github.com/maxence-charriere/go-app/v9/pkg/app"
 )
+
+var ghPagePrefix string
 
 // The main function is the entry point where the app is configured and started.
 // It is executed in 2 different environments: A client (the web browser) and a
@@ -30,7 +33,7 @@ func _main() {
 	err := app.GenerateStaticWebsite("docs", &app.Handler{
 		Name:        "Hello",
 		Description: "An Hello World! example",
-		Resources:   app.GitHubPages("go-app-hello"),
+		Resources:   app.GitHubPages(ghPagePrefix),
 	})
 
 	if err != nil {
@@ -39,6 +42,8 @@ func _main() {
 }
 
 func TestPublish(t *testing.T) {
+	ghPagePrefix = os.Getenv("ghPagePrefix")
+	t.Logf(ghPagePrefix)
 	_main()
 	t.Logf("Site built")
 }

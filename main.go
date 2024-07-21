@@ -6,7 +6,7 @@ import (
 
 	"hello/components"
 
-	"github.com/maxence-charriere/go-app/v9/pkg/app"
+	"github.com/maxence-charriere/go-app/v10/pkg/app"
 )
 
 // The main function is the entry point where the app is configured and started.
@@ -17,7 +17,7 @@ func main() {
 	//
 	// This is done by calling the Route() function,  which tells go-app what
 	// component to display for a given path, on both client and server-side.
-	app.Route("/", &components.Hello{})
+	app.Route("/", func() app.Composer { return &components.Hello{} })
 
 	// Once the routes set up, the next thing to do is to either launch the app
 	// or the server that serves the app.
@@ -36,6 +36,13 @@ func main() {
 	http.Handle("/", &app.Handler{
 		Name:        "Hello",
 		Description: "An Hello World! example",
+		Image:       "/web/icon-192.png",
+		Icon: app.Icon{
+			SVG:      "/web/icon.svg",
+			Default:  "/web/icon-192.png",
+			Large:    "/web/icon-512.png",
+			Maskable: "/web/icon-192.png",
+		},
 	})
 
 	log.Println("Listening on http://:8000")

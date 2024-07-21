@@ -1,7 +1,7 @@
 package components
 
 import (
-	"github.com/maxence-charriere/go-app/v9/pkg/app"
+	"github.com/maxence-charriere/go-app/v10/pkg/app"
 )
 
 type Hello struct {
@@ -24,11 +24,11 @@ func (h *Hello) Render() app.UI {
 		Body(
 			app.H1().Body(
 				app.Text("Hello, "),
-				app.If(h.name != "",
-					app.Text(h.name),
-				).Else(
-					app.Text("World!"),
-				),
+				app.If(h.name != "", func() app.UI {
+					return app.Text(h.name)
+				}).Else(func() app.UI {
+					return app.Text("World!")
+				}),
 			),
 			app.P().Body(
 				app.Input().
@@ -38,10 +38,10 @@ func (h *Hello) Render() app.UI {
 					AutoFocus(true).
 					OnChange(h.ValueTo(&h.name)),
 			),
-			app.If(h.isAppInstallable,
-				app.Button().
-					Text("Install App").
-					OnClick(h.onInstallButtonClicked),
-			),
+			// app.If(h.isAppInstallable,
+			// 	app.Button().
+			// 		Text("Install App").
+			// 		OnClick(h.onInstallButtonClicked),
+			// ),
 		)
 }

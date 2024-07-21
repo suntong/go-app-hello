@@ -7,10 +7,10 @@ import (
 
 	"hello/components"
 
-	"github.com/maxence-charriere/go-app/v9/pkg/app"
+	"github.com/maxence-charriere/go-app/v10/pkg/app"
 )
 
-var ghPagePrefix string
+var ghPagePrefix string = os.Getenv("ghPagePrefix")
 
 // The main function is the entry point where the app is configured and started.
 // It is executed in 2 different environments: A client (the web browser) and a
@@ -20,7 +20,7 @@ func _main() {
 	//
 	// This is done by calling the Route() function,  which tells go-app what
 	// component to display for a given path, on both client and server-side.
-	app.Route("/", &components.Hello{})
+	app.Route("/", func() app.Composer { return &components.Hello{} })
 
 	// Once the routes set up, the next thing to do is to either launch the app
 	// or the server that serves the app.
@@ -34,11 +34,12 @@ func _main() {
 		Name:        "Hello",
 		Description: "An Hello World! example",
 		Resources:   app.GitHubPages(ghPagePrefix),
-		Image:       "/web/icon.png",
+		Image:       "/web/icon-192.png",
 		Icon: app.Icon{
-			Default:    "/web/icon.png",
-			Large:      "/web/icon.png",
-			AppleTouch: "/web/icon.png",
+			SVG:      "/web/icon.svg",
+			Default:  "/web/icon-192.png",
+			Large:    "/web/icon-512.png",
+			Maskable: "/web/icon-192.png",
 		},
 	})
 
@@ -48,7 +49,6 @@ func _main() {
 }
 
 func TestPublish(t *testing.T) {
-	ghPagePrefix = os.Getenv("ghPagePrefix")
 	t.Logf(ghPagePrefix)
 	_main()
 	t.Logf("Site built")

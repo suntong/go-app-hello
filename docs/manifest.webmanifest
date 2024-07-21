@@ -4,23 +4,29 @@
   "description": "An Hello World! example",
   "icons": [
     {
-      "src": "",
+      "src": "/go-app-hello/web/icon.svg",
       "type": "image/svg+xml",
       "sizes": "any"
     },
     {
-      "src": "/go-app-hello/web/icon.png",
+      "src": "/go-app-hello/web/icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "/go-app-hello/web/icon.png",
+      "src": "/go-app-hello/web/icon-192.png",
       "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/go-app-hello/web/icon-192.png",
+      "type": "image/png",
+      "purpose": "maskable",
       "sizes": "192x192"
     }
   ],
   "scope": "/go-app-hello/",
-  "start_url": "/go-app-hello/",
+  "start_url": "/go-app-hello",
   "background_color": "#2d2c2c",
   "theme_color": "#2d2c2c",
   "display": "standalone"

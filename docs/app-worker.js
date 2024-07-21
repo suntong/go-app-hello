@@ -1,44 +1,50 @@
-const cacheName = "app-" + "d1e57fa97129e0e7309dd50b5e12ec93f86ee1a0";
-const resourcesToCache = ["/go-app-hello","/go-app-hello/app.css","/go-app-hello/app.js","/go-app-hello/manifest.webmanifest","/go-app-hello/wasm_exec.js","/go-app-hello/web/app.wasm","/go-app-hello/web/icon.png"];
+// -----------------------------------------------------------------------------
+// PWA
+// -----------------------------------------------------------------------------
+const cacheName = "app-" + "a9afbfc4e9c504f5fea31574dc2077160696ef6d";
+const resourcesToCache = ["/go-app-hello","/go-app-hello/app.css","/go-app-hello/app.js","/go-app-hello/manifest.webmanifest","/go-app-hello/wasm_exec.js","/go-app-hello/web/app.wasm","/go-app-hello/web/icon-192.png","/go-app-hello/web/icon-512.png"];
 
 self.addEventListener("install", (event) => {
-  console.log("installing app worker d1e57fa97129e0e7309dd50b5e12ec93f86ee1a0");
-
-  event.waitUntil(
-    caches
-      .open(cacheName)
-      .then((cache) => {
-        return cache.addAll(resourcesToCache);
-      })
-      .then(() => {
-        self.skipWaiting();
-      })
-  );
+  console.log("installing app worker a9afbfc4e9c504f5fea31574dc2077160696ef6d");
+  event.waitUntil(installWorker());
 });
+
+async function installWorker() {
+  const cache = await caches.open(cacheName);
+  await cache.addAll(resourcesToCache);
+  await self.skipWaiting(); // Use this new service worker
+}
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key !== cacheName) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
-  );
-  console.log("app worker d1e57fa97129e0e7309dd50b5e12ec93f86ee1a0 is activated");
+  event.waitUntil(deletePreviousCaches());
+  console.log("app worker a9afbfc4e9c504f5fea31574dc2077160696ef6d is activated");
 });
+
+async function deletePreviousCaches() {
+  keys = await caches.keys();
+  keys.forEach(async (key) => {
+    if (key != cacheName) {
+      console.log("deleting", key, "cache");
+      await caches.delete(key);
+    }
+  });
+}
 
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
-  );
+  event.respondWith(fetchWithCache(event.request));
 });
 
+async function fetchWithCache(request) {
+  cachedResponse = await caches.match(request);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+  return fetch(request);
+}
+
+// -----------------------------------------------------------------------------
+// Push Notifications
+// -----------------------------------------------------------------------------
 self.addEventListener("push", (event) => {
   if (!event.data || !event.data.text()) {
     return;

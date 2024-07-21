@@ -2,11 +2,20 @@
 // go-app
 // -----------------------------------------------------------------------------
 var goappNav = function () {};
-var goappOnUpdate = function () {};
-var goappOnAppInstallChange = function () {};
 
-const goappEnv = {"GOAPP_INTERNAL_URLS":"null","GOAPP_ROOT_PREFIX":"/go-app-hello","GOAPP_STATIC_RESOURCES_URL":"/go-app-hello","GOAPP_VERSION":"d1e57fa97129e0e7309dd50b5e12ec93f86ee1a0"};
+var goappUpdatedBeforeWasmLoaded = false;
+var goappOnUpdate = function () {
+  goappUpdatedBeforeWasmLoaded = true;
+};
+
+var goappAppInstallChangedBeforeWasmLoaded = false;
+var goappOnAppInstallChange = function () {
+  goappAppInstallChangedBeforeWasmLoaded = true;
+};
+
+const goappEnv = {"GOAPP_INTERNAL_URLS":"null","GOAPP_ROOT_PREFIX":"/go-app-hello","GOAPP_STATIC_RESOURCES_URL":"/go-app-hello/web","GOAPP_VERSION":"a9afbfc4e9c504f5fea31574dc2077160696ef6d"};
 const goappLoadingLabel = "{progress}%";
+const goappWasmContentLength = "";
 const goappWasmContentLengthHeader = "";
 
 let goappServiceWorkerRegistration;
@@ -22,18 +31,18 @@ goappInitWebAssembly();
 // -----------------------------------------------------------------------------
 async function goappInitServiceWorker() {
   if ("serviceWorker" in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register(
-        "/go-app-hello/app-worker.js"
-      );
-
-      goappServiceWorkerRegistration = registration;
-      goappSetupNotifyUpdate(registration);
-      goappSetupAutoUpdate(registration);
-      goappSetupPushNotification();
-    } catch (err) {
-      console.error("goapp service worker registration failed", err);
-    }
+    window.addEventListener("load", async () => {
+      try {
+        const registration = await navigator.serviceWorker.register(
+          "/go-app-hello/app-worker.js"
+        );
+        goappServiceWorkerRegistration = registration;
+        goappSetupNotifyUpdate(registration);
+        goappSetupPushNotification();
+      } catch (err) {
+        console.error("goapp service worker registration failed: ", err);
+      }
+    });
   }
 }
 
@@ -49,32 +58,25 @@ function goappWatchForUpdate() {
 }
 
 function goappSetupNotifyUpdate(registration) {
-  registration.onupdatefound = () => {
-    const installingWorker = registration.installing;
-
-    installingWorker.onstatechange = () => {
-      if (installingWorker.state != "installed") {
-        return;
-      }
-
+  registration.addEventListener("updatefound", (event) => {
+    const newSW = registration.installing;
+    newSW.addEventListener("statechange", (event) => {
       if (!navigator.serviceWorker.controller) {
         return;
       }
-
+      if (newSW.state != "activated") {
+        return;
+      }
       goappOnUpdate();
-    };
-  };
+    });
+  });
 }
 
-function goappSetupAutoUpdate(registration) {
-  const autoUpdateInterval = "0";
-  if (autoUpdateInterval == 0) {
+function goappTryUpdate() {
+  if (!goappServiceWorkerRegistration) {
     return;
   }
-
-  window.setInterval(() => {
-    registration.update();
-  }, autoUpdateInterval);
+  goappServiceWorkerRegistration.update();
 }
 
 // -----------------------------------------------------------------------------
@@ -243,12 +245,14 @@ function goappCanLoadWebAssembly() {
 async function fetchWithProgress(url, progess) {
   const response = await fetch(url);
 
-  let contentLength;
-  try {
-    contentLength = response.headers.get(goappWasmContentLengthHeader);
-  } catch {}
-  if (!goappWasmContentLengthHeader || !contentLength) {
-    contentLength = response.headers.get("Content-Length");
+  let contentLength = goappWasmContentLength;
+  if (contentLength <= 0) {
+    try {
+      contentLength = response.headers.get(goappWasmContentLengthHeader);
+    } catch {}
+    if (!goappWasmContentLengthHeader || !contentLength) {
+      contentLength = response.headers.get("Content-Length");
+    }
   }
 
   const total = parseInt(contentLength, 10);

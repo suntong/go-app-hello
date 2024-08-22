@@ -1,11 +1,11 @@
 // -----------------------------------------------------------------------------
 // PWA
 // -----------------------------------------------------------------------------
-const cacheName = "app-" + "a9afbfc4e9c504f5fea31574dc2077160696ef6d";
+const cacheName = "app-" + "7b178e789cbf91bdea1a5b01a62277b73206b226";
 const resourcesToCache = ["/go-app-hello","/go-app-hello/app.css","/go-app-hello/app.js","/go-app-hello/manifest.webmanifest","/go-app-hello/wasm_exec.js","/go-app-hello/web/app.wasm","/go-app-hello/web/icon-192.png","/go-app-hello/web/icon-512.png"];
 
 self.addEventListener("install", (event) => {
-  console.log("installing app worker a9afbfc4e9c504f5fea31574dc2077160696ef6d");
+  console.log("installing app worker 7b178e789cbf91bdea1a5b01a62277b73206b226");
   event.waitUntil(installWorker());
 });
 
@@ -17,7 +17,7 @@ async function installWorker() {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(deletePreviousCaches());
-  console.log("app worker a9afbfc4e9c504f5fea31574dc2077160696ef6d is activated");
+  console.log("app worker 7b178e789cbf91bdea1a5b01a62277b73206b226 is activated");
 });
 
 async function deletePreviousCaches() {

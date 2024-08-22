@@ -25,8 +25,8 @@
       "sizes": "192x192"
     }
   ],
-  "scope": "/go-app-hello/",
-  "start_url": "/go-app-hello/",
+  "scope": "/",
+  "start_url": "/go-app-hello",
   "background_color": "#2d2c2c",
   "theme_color": "#2d2c2c",
   "display": "standalone"
